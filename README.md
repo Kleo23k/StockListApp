@@ -34,6 +34,7 @@ Mock data is served using json-server, with integration for additional APIs such
    
 4. **Start the JSON Server to simulate the backend API with the provided `companies.json` file:**
    ```bash
+   cd Project1/frontend/stocks
    json-server --watch companies.json
 
 5. **Set up the backend:**
