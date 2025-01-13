@@ -55,12 +55,6 @@ async function fetchFilteredDataFromBackend(sector,page) {
         // Fetch filtered data from the backend
         const stocks = await apiService.fetchFilteredStocks(sector,page,itemsPerPage)
         
-        // if (!response.ok) {
-        //     throw new Error("Failed to fetch filtered stocks data from backend");
-        // }
-
-        // Parse the JSON response from the backend
-        
 
         // Store the filtered results in allStocksByPage for the current page
         allStocksByPage[page] = stocks.content;
@@ -68,15 +62,6 @@ async function fetchFilteredDataFromBackend(sector,page) {
         // Update the total number of items (used for pagination)
         totalItems = stocks.totalElements;
 
-        // // Ensure the original index is included for each stock
-        // allStocksByPage[page] = data.content.map(stock => {
-        //     return {
-        //         ...stock,
-        //         originalIndex: stock.originalIndex // Ensure originalIndex is kept
-        //     };
-        // });
-
-        // Update the UI with the filtered data
         updateUi();
     } catch (error) {
         console.error("Error fetching data from backend:", error);
@@ -95,8 +80,7 @@ function updateUi(rankBy = "marketCap", sortedStocks = null) {
         if(stocksToShow.length === 0){
            table.innerHTML = `<h1>No available stocks for this page on the ${sector} sector</h1>`;
         }
-        // prevBtn.style.display = "none";
-        // nextBtn.style.display = "none";
+    
     }
     
     if(window.location.pathname === "/stock-detail.html") return
@@ -150,7 +134,7 @@ function updateUi(rankBy = "marketCap", sortedStocks = null) {
             <th scope="row">${(currentPage * itemsPerPage) + index + 1}</th>
             <td>
                 <div class="stock-info">
-                    <img src="${logoUrl}" alt="${Symbol} logo" class="stock-logo"/>
+                    <img src="${logoUrl}" alt="${Symbol} logo" class="stock-logo" loading="lazy"/>
                     <div class="stock-names">
                      <a class="stock-details" href="stock-detail.html?page=${currentPage}&index=${originalIndex}&symbol=${Symbol}">
                         <div>${Shortname}</div>
@@ -213,28 +197,24 @@ export function formSubmission() {
     const messageInput = document.getElementById("messageInput");
     const contactForm = document.getElementById("contactForm");
 
-    // Ensure elements exist before adding the event listener
     if (!contactForm || !nameInput || !emailInput || !messageInput) {
         console.error("One or more form elements are missing.");
         return;
     }
 
     contactForm.addEventListener("submit", (e) => {
-        e.preventDefault(); // Prevent form from submitting the default way
-
-        // Create alert div (clear existing alert if any)
+        e.preventDefault(); 
         let alert = document.querySelector(".alert");
-        if (alert) alert.remove(); // Remove existing alert before adding new one
+        if (alert) alert.remove(); 
 
-        alert = document.createElement("div"); // Create new alert div
+        alert = document.createElement("div"); 
 
-        // Check if all inputs have values
         if (nameInput.value && emailInput.value && messageInput.value) {
-            const formData = new FormData(contactForm); // Pass the contactForm element explicitly
+            const formData = new FormData(contactForm); 
 
             fetch("http://localhost:8080/api/submitForm", {
                 method: "POST",
-                body: JSON.stringify(Object.fromEntries(formData.entries())), // Convert form data to JSON
+                body: JSON.stringify(Object.fromEntries(formData.entries())),
                 headers: { 'Content-Type': 'application/json' }
             })
             .then(response => response.text())
@@ -345,7 +325,7 @@ async function searchStocks() {
     const resultsContainer = document.getElementById('autocomplete-results');
     
     input.addEventListener("keyup", async () => {
-        const query = input.value;  // Declare query inside the event handler
+        const query = input.value; 
         resultsContainer.innerHTML = '';
 
         if (query.length < 1) {
@@ -366,7 +346,7 @@ async function searchStocks() {
                 item.href = `stock-detail.html?page=${currentPage}&index=${stock.originalIndex}&symbol=${stock.Symbol}`; 
                 item.innerHTML = `
                     <div class="stock-info">
-                        <img src="${stock.logoUrl}" alt="${stock.Symbol} logo" class="stock-logo-search"/>
+                        <img src="${stock.logoUrl}" alt="${stock.Symbol} logo" class="stock-logo-search"/ loading="lazy"/>
                         <div class="stock-names">
                             <div>${stock.Shortname}</div>  
                             <div>${stock.Symbol}</div>    
